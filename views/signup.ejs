@@ -1,0 +1,65 @@
+<%- include('partials/header.ejs')%>
+<div class="container  border-bottom shadow p-3 mb-5 bg-body rounded">
+  <h1>Register</h1>
+  <form>
+    <div class="form-group">
+      <label for="name">Name: </label>
+      <input type="text" class="form-control" name='name' placeholder="Enter Name" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Email: </label>
+      <input type="email" class="form-control" name = 'email' placeholder="Enter Email" required>
+      <div class="form-group mt-2  email error"></div>
+    </div>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input type="password" placeholder="Enter password" name='password' class="form-control" required>
+      <div class="form-group mt-2 password error"></div>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-success">Sign Up</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const form = document.querySelector('form');
+  const emailError = document.querySelector('.email.error');
+  const passwordError = document.querySelector('.password.error');
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+
+    // =====Reset Errors=====
+    emailError.textContent = '';
+    passwordError.textContent = '';
+
+    const name = form.name.value;
+    const email = form.email.value;
+    const password = form.password.value;
+
+    try {
+      const response = await fetch('/signup', {
+        method: 'POST',
+        body: JSON.stringify({
+          name, email, password
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const result = await response.json();
+      if(result.errors) {
+        emailError.textContent = result.errors.email;
+        passwordError.textContent = result.errors.password;
+      }
+      if(result.response.id) {
+        location.assign('/');
+      }
+    }catch(err){
+      console.log(err);
+    } 
+  });
+</script>
+
+<%- include('partials/footer.ejs')%>

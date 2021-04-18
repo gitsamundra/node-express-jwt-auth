@@ -1,0 +1,8 @@
+.error {
+  color: brown;
+}
+
+ul {
+  list-style: none;
+  display: block;
+}
